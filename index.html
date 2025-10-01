@@ -313,90 +313,129 @@ body::after {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-// 🔹 Generar resumen en texto (para PDF y WhatsApp)
-function generarResumen() {
-    let resumen = "📋 Resumen de pedido - The Family Store\n\n";
+/* --- CONFIG --- */
+const WHATSAPP_NUM = "573014348004"; // <- pon tu número en formato internacional
+const MANO_OBRA = 2000; // si en tu proyecto usas otro valor, cámbialo aquí
 
-    document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
-        resumen += `Pulsera ${i + 1}:\n`;
+/* --- Helpers --- */
+// Extrae nombre y precio desde la estructura: <div class="decoracion"><span>Nombre ($precio)</span> ... <input data-precio="..."></div>
+function obtenerNombreYPrecio(deco, input) {
+  // nombre desde el <span>
+  const span = deco.querySelector("span");
+  let textoSpan = span ? span.textContent.trim() : "";
+  // quitar el "( $... )" para sacar solo el nombre
+  const nombre = textoSpan.replace(/\s*\(\s*\$?[0-9.,]+\s*\)\s*$/g, "").trim() || (input.dataset?.nombre || "Decoracion");
 
-        pulsera.querySelectorAll(".decoracion").forEach(deco => {
-            let input = deco.querySelector("input");
-            let cantidad = parseInt(input.value) || 0;
-            if (cantidad > 0) {
-                let nombre = deco.querySelector("span").textContent.trim();
-                let precio = parseInt(input.dataset.precio);
-                let subtotal = cantidad * precio;
-                resumen += `- ${nombre} x${cantidad} = $${subtotal.toLocaleString("es-CO")} COP\n`;
-            }
-        });
+  // precio: primero intentar data-precio, si no, parsear del span
+  let precio = 0;
+  if (input && input.dataset && input.dataset.precio) {
+    precio = parseInt(input.dataset.precio, 10) || 0;
+  } else {
+    const m = textoSpan.match(/\$?([0-9.,]+)/);
+    if (m) {
+      precio = parseInt(m[1].replace(/\./g,"").replace(/,/g,""), 10) || 0;
+    }
+  }
 
-        resumen += "\n";
+  return { nombre, precio };
+}
+
+// Limpia texto para PDF (jsPDF a veces no soporta bien caracteres UTF-8)
+// Solo se usa antes de crear el PDF; WhatsApp recibirá el texto original con acentos.
+function sanearParaPDF(texto) {
+  // normalizar y quitar diacríticos (á -> a), luego eliminar caracteres no ascii imprimibles
+  let t = texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  // permitir caracteres básicos, números, signos de puntuación, espacios y saltos de línea
+  t = t.replace(/[^\x20-\x7E\n]/g, "");
+  return t;
+}
+
+/* --- Generar resumen (texto con nombres, cantidades y subtotales) --- */
+function generarResumenTexto() {
+  let resumen = "Resumen de pedido - The Family Store\n\n";
+  let totalGeneral = 0;
+
+  const pulseras = document.querySelectorAll(".pulsera");
+  if (pulseras.length === 0) {
+    resumen += "No hay pulseras seleccionadas.\n\n";
+  }
+
+  pulseras.forEach((pulsera, i) => {
+    resumen += `Pulsera ${i+1}:\n`;
+    // Mano de obra por pulsera
+    let subtotalPulsera = MANO_OBRA;
+
+    // recorrer las decoraciones (cada .decoracion)
+    pulsera.querySelectorAll(".decoracion").forEach(deco => {
+      const input = deco.querySelector("input");
+      if (!input) return;
+      const cantidad = parseInt(input.value || "0", 10) || 0;
+      if (cantidad <= 0) return;
+
+      const { nombre, precio } = obtenerNombreYPrecio(deco, input);
+      const subtotalItem = cantidad * precio;
+      resumen += ` - ${nombre} ($${precio.toLocaleString("es-CO")}) x${cantidad} = $${subtotalItem.toLocaleString("es-CO")} COP\n`;
+      subtotalPulsera += subtotalItem;
     });
 
-    let total = document.getElementById("total").textContent;
-    resumen += `💲 Total: ${total}`;
-    return resumen;
+    resumen += ` Mano de obra: $${MANO_OBRA.toLocaleString("es-CO")} COP\n`;
+    resumen += ` Subtotal Pulsera ${i+1}: $${subtotalPulsera.toLocaleString("es-CO")} COP\n\n`;
+    totalGeneral += subtotalPulsera;
+  });
+
+  resumen += `Total: $${totalGeneral.toLocaleString("es-CO")} COP\n`;
+  return { texto: resumen, total: totalGeneral };
 }
 
-// 🔹 Descargar en PDF
-function limpiarTexto(texto) {
-    return texto
-        .normalize("NFD") // separa acentos
-        .replace(/[\u0300-\u036f]/g, "") // elimina marcas de acentos
-        .replace(/[^a-zA-Z0-9$.,:;@()\-\s]/g, ""); // filtra símbolos raros
-}
-
-// 🔹 Descargar en PDF con jsPDF
+/* --- Descargar PDF (usa jsPDF) --- */
 function descargarPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
 
-    let contenido = "Resumen de pedido - The Family Store\n\n";
+  const resumenObj = generarResumenTexto();
+  // Sanear para evitar caracteres raros en el PDF
+  const contenido = sanearParaPDF(resumenObj.texto);
 
-    document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
-        contenido += `Pulsera ${i + 1}:\n`;
-        pulsera.querySelectorAll("input").forEach(input => {
-            let cantidad = parseInt(input.value) || 0;
-            if (cantidad > 0) {
-                let label = input.getAttribute("data-nombre"); // nombre
-                let precio = parseInt(input.getAttribute("data-precio")); // precio
-                let subtotal = cantidad * precio;
-                contenido += `- ${label} ($${precio}) x${cantidad}  $${subtotal.toLocaleString("es-CO")} COP\n`;
-            }
-        });
-        contenido += "\n";
-    });
+  // dibujar texto en PDF con saltos de línea automáticos
+  const lineHeight = 14;
+  let x = 40;
+  let y = 40;
+  const pageHeightLimit = 800;
 
-    // 👇 Corregido: solo sacamos el número del total
-    let totalTexto = document.getElementById("total").textContent;
-    let soloNumero = totalTexto.replace("Total:", "").trim();
+  const lines = doc.splitTextToSize(contenido, 520);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(12);
+  for (let i = 0; i < lines.length; i++) {
+    if (y > pageHeightLimit) {
+      doc.addPage();
+      y = 40;
+    }
+    doc.text(lines[i], x, y);
+    y += lineHeight;
+  }
 
-    contenido += `Total: ${soloNumero}`;
-
-    // Imprimir en PDF con saltos de línea
-    let y = 10;
-    contenido.split("\n").forEach(linea => {
-        doc.text(linea, 10, y);
-        y += 8;
-    });
-
-    doc.save("pedido.pdf");
+  doc.save("vale_compra.pdf");
 }
 
-
-// 🔹 Enviar por WhatsApp
+/* --- Enviar por WhatsApp (abre conversación al número fijo) --- */
 function enviarWhatsApp() {
-    const resumen = generarResumen();
-    const mensaje = encodeURIComponent(resumen);
-    const numero = "573014348004"; // <-- cambia este número por el tuyo
-    window.open(`https://wa.me/${numero}?text=${mensaje}`, "_blank");
+  const resumenObj = generarResumenTexto();
+  const mensaje = resumenObj.texto; // NO lo saneamos: WhatsApp admite UTF-8 y acentos
+  const numero = WHATSAPP_NUM.replace(/\D/g, "");
+  const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+  window.open(url, "_blank");
 }
+
+/* --- Exponer en window si quieres (opcional) ) --- */
+window.generarResumenTexto = generarResumenTexto;
+window.descargarPDF = descargarPDF;
+window.enviarWhatsApp = enviarWhatsApp;
 </script>
-  
+
 </body>
 
 </html>
+
 
 
 
