@@ -296,9 +296,77 @@ body::after {
 
     calcularTotal();
   </script>
+  <!-- Botones de exportar -->
+<div style="margin-top:20px; text-align:center;">
+  <button onclick="descargarPDF()" 
+          style="background:#4CAF50;color:white;padding:10px 15px;margin:5px;border:none;border-radius:8px;cursor:pointer;">
+    📄 Descargar Vale en PDF
+  </button>
+
+  <button onclick="enviarWhatsApp()" 
+          style="background:#25D366;color:white;padding:10px 15px;margin:5px;border:none;border-radius:8px;cursor:pointer;">
+    💬 Enviar por WhatsApp
+  </button>
+</div>
+
+<!-- Librería jsPDF (para generar PDF) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+  // Descargar en PDF
+  function descargarPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    let contenido = "Resumen de pedido - The Family Store\n\n";
+
+    document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
+      contenido += `Pulsera ${i + 1}:\n`;
+      pulsera.querySelectorAll("input").forEach(input => {
+        let cantidad = parseInt(input.value) || 0;
+        if (cantidad > 0) {
+          let label = input.previousSibling.textContent.trim();
+          contenido += `   - ${label} x${cantidad}\n`;
+        }
+      });
+      contenido += "\n";
+    });
+
+    let total = document.getElementById("total").textContent;
+    contenido += total;
+
+    doc.text(contenido, 10, 10);
+    doc.save("pedido.pdf");
+  }
+
+  // Enviar por WhatsApp
+  function enviarWhatsApp() {
+    let mensaje = "Hola, este es mi pedido en The Family Store:\n\n";
+
+    document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
+      mensaje += `Pulsera ${i + 1}:\n`;
+      pulsera.querySelectorAll("input").forEach(input => {
+        let cantidad = parseInt(input.value) || 0;
+        if (cantidad > 0) {
+          let label = input.previousSibling.textContent.trim();
+          mensaje += `   - ${label} x${cantidad}\n`;
+        }
+      });
+      mensaje += "\n";
+    });
+
+    let total = document.getElementById("total").textContent;
+    mensaje += total;
+
+    let url = "https://wa.me/?text=" + encodeURIComponent(mensaje);
+    window.open(url, "_blank");
+  }
+</script>
+
 </body>
 
 </html>
+
 
 
 
