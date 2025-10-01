@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>The Family Store</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #fdfdfd; }
+    h1 { text-align: center; color: #333; }
+    .pulsera { border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 10px; }
+    button { padding: 10px; margin: 5px; border-radius: 8px; cursor: pointer; }
+    .btn { background: #333; color: white; }
+    .btn:hover { background: #555; }
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;                     /* top:0; right:0; bottom:0; left:0; */
+  background: url("fondo.jpg") center/cover no-repeat;
+  filter: blur(8px) brightness(0.7);
+  transform: scale(1.05);       /* evitar bordes visibles por el blur */
+  z-index: -2;
+  will-change: transform, filter;
+}
+
+/* Layer: oscurecer/atenuar el fondo para mejor contraste */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25); /* ajusta la opacidad a tu gusto */
+  z-index: -1;
+}
+
+/* Tu contenedor principal debe estar por encima */
+.contenedor {
+  position: relative;
+  z-index: 1;
+  /* si quieres que la tarjeta también tenga un ligero blur por detrás */
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(2px); /* bonito toque; no lo usa todo navegador, pero está bien */
+  -webkit-backdrop-filter: blur(2px);
+  /* resto del estilo ya existente */
+}
+
+
+  </style>
+</head>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>The Family Store</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f7f7f7;
+      color: #222;
+    }
+
+    .contenedor {
+      max-width: 700px;
+      margin: 40px auto;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .pulsera {
+      border: 2px solid #ddd;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .pulsera h3 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0;
+    }
+
+    .btn-borrar {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: #d32f2f;
+    }
+
+    .decoracion {
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .contador {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .contador button {
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 5px;
+      background: #f57c00;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .contador button:hover {
+      background: #ef6c00;
+    }
+
+    .contador input {
+      width: 40px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+      height: 30px;
+    }
+
+    .subtotal {
+      margin-top: 10px;
+      font-weight: bold;
+      text-align: right;
+    }
+
+    #total {
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #agregarPulsera {
+      display: block;
+      margin: 0 auto;
+      padding: 10px 20px;
+      background: #388e3c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #agregarPulsera:hover {
+      background: #2e7d32;
+    }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <h1>🧿 The Family Store</h1>
+    <p>Arma tus pulseras con las decoraciones que quieras. Cada pulsera tiene un costo fijo de <b>$2000 COP</b> por mano de obra.</p>
+
+    <div id="pulseras">
+      <div class="pulsera">
+        <h3>Pulsera 1 <button class="btn-borrar">🗑️</button></h3>
+
+        <div class="decoracion">
+          <span>Corazón ($2000)</span>
+          <div class="contador">
+            <button class="menos">-</button>
+            <input type="text" value="0" readonly data-precio="2000">
+            <button class="mas">+</button>
+          </div>
+        </div>
+
+        <div class="decoracion">
+          <span>Estrella ($1500)</span>
+          <div class="contador">
+            <button class="menos">-</button>
+            <input type="text" value="0" readonly data-precio="1500">
+            <button class="mas">+</button>
+          </div>
+        </div>
+
+        <div class="decoracion">
+          <span>Inicial personalizada ($1800)</span>
+          <div class="contador">
+            <button class="menos">-</button>
+            <input type="text" value="0" readonly data-precio="1800">
+            <button class="mas">+</button>
+          </div>
+        </div>
+
+        <div class="decoracion">
+          <span>Dije varios ($2500)</span>
+          <div class="contador">
+            <button class="menos">-</button>
+            <input type="text" value="0" readonly data-precio="2500">
+            <button class="mas">+</button>
+          </div>
+        </div>
+
+        <div class="subtotal">Subtotal: $2000 COP</div>
+      </div>
+    </div>
+
+    <button id="agregarPulsera">➕ Agregar otra pulsera</button>
+    <div id="total">Total: $2000 COP</div>
+  </div>
+
+  <script>
+    function calcularTotal() {
+      let total = 0;
+      const pulseras = document.querySelectorAll(".pulsera");
+
+      pulseras.forEach(pulsera => {
+        let subtotal = 2000; // mano de obra
+        const decoraciones = pulsera.querySelectorAll("input");
+
+        decoraciones.forEach(input => {
+          const cantidad = parseInt(input.value) || 0;
+          const precio = parseInt(input.dataset.precio);
+          subtotal += cantidad * precio;
+        });
+
+        pulsera.querySelector(".subtotal").innerText =
+          "Subtotal: $" + subtotal.toLocaleString("es-CO") + " COP";
+
+        total += subtotal;
+      });
+
+      document.getElementById("total").innerText =
+        "Total: $" + total.toLocaleString("es-CO") + " COP";
+    }
+
+    function activarBotones(pulsera) {
+      pulsera.querySelectorAll(".contador").forEach(contador => {
+        const input = contador.querySelector("input");
+        const mas = contador.querySelector(".mas");
+        const menos = contador.querySelector(".menos");
+
+        mas.addEventListener("click", () => {
+          input.value = parseInt(input.value) + 1;
+          calcularTotal();
+        });
+
+        menos.addEventListener("click", () => {
+          if (parseInt(input.value) > 0) {
+            input.value = parseInt(input.value) - 1;
+            calcularTotal();
+          }
+        });
+      });
+
+      const btnBorrar = pulsera.querySelector(".btn-borrar");
+      btnBorrar.addEventListener("click", () => {
+        if (confirm("¿Seguro que quieres eliminar esta pulsera?")) {
+          pulsera.remove();
+          renumerarPulseras();
+          calcularTotal();
+        }
+      });
+    }
+
+    function renumerarPulseras() {
+      document.querySelectorAll(".pulsera h3").forEach((h3, index) => {
+        h3.firstChild.textContent = "Pulsera " + (index + 1) + " ";
+      });
+    }
+
+    document.querySelectorAll(".pulsera").forEach(activarBotones);
+
+    document.getElementById("agregarPulsera").addEventListener("click", () => {
+      const pulseraOriginal = document.querySelector(".pulsera");
+      const nueva = pulseraOriginal.cloneNode(true);
+
+      nueva.querySelectorAll("input").forEach(input => {
+        input.value = 0;
+      });
+
+      document.getElementById("pulseras").appendChild(nueva);
+      activarBotones(nueva);
+      renumerarPulseras();
+      calcularTotal();
+    });
+
+    calcularTotal();
+  </script>
+</body>
+</html>
