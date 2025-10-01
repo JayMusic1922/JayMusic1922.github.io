@@ -340,32 +340,36 @@ body::after {
   }
 
   // Enviar por WhatsApp
-  function enviarWhatsApp() {
-    let mensaje = "Hola, este es mi pedido en The Family Store:\n\n";
+ function enviarWhatsApp() {
+  let mensaje = "Hola, este es mi pedido en The Family Store:\n\n";
 
-    document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
-      mensaje += `Pulsera ${i + 1}:\n`;
-      pulsera.querySelectorAll("input").forEach(input => {
-        let cantidad = parseInt(input.value) || 0;
-        if (cantidad > 0) {
-          let label = input.previousSibling.textContent.trim();
-          mensaje += `   - ${label} x${cantidad}\n`;
-        }
-      });
-      mensaje += "\n";
+  document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
+    mensaje += `Pulsera ${i + 1}:\n`;
+    pulsera.querySelectorAll("input").forEach(input => {
+      let cantidad = parseInt(input.value) || 0;
+      if (cantidad > 0) {
+        let label = input.previousSibling.textContent.trim();
+        mensaje += `   - ${label} x${cantidad}\n`;
+      }
     });
+    mensaje += "\n";
+  });
 
-    let total = document.getElementById("total").textContent;
-    mensaje += total;
+  let total = document.getElementById("total").textContent;
+  mensaje += total;
 
-    let url = "https:/573014348004/wa.me/?text=" + encodeURIComponent(mensaje);
-    window.open(url, "_blank");
-  }
+  // 👇 Aquí pones tu número
+  let numero = "573014348004"; // ejemplo
+  let url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje);
+
+  window.open(url, "_blank");
+}
 </script>
 
 </body>
 
 </html>
+
 
 
 
