@@ -323,15 +323,15 @@ function descargarPDF() {
     document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
         contenido += `Pulsera ${i + 1}:\n`;
 
-        pulsera.querySelectorAll(".dije").forEach(dije => {
-            let input = dije.querySelector("input");
-            let cantidad = parseInt(input.value) || 0;
-            if (cantidad > 0) {
-                // Ahora tomamos el texto del dije directamente del span o label
-                let nombreDije = dije.querySelector(".nombre-dije").textContent.trim();
-                contenido += `- ${nombreDije} x${cantidad}\n`;
-            }
-        });
+        pulsera.querySelectorAll(".decoracion").forEach(deco => {
+    let input = deco.querySelector("input");
+    let cantidad = parseInt(input.value) || 0;
+    if (cantidad > 0) {
+        let nombre = deco.querySelector("span").textContent.trim();
+        let precio = parseInt(input.dataset.precio);
+        contenido += `- ${nombre} x${cantidad} = $${(cantidad * precio).toLocaleString("es-CO")} COP\n`;
+    }
+});
 
         contenido += "\n";
     });
@@ -344,17 +344,34 @@ function descargarPDF() {
 }
 
 // Enviar por WhatsApp
-function enviarWhatsApp() {
-      const resumen = generarResumen();
-      const mensaje = encodeURIComponent(resumen);
-      const numero = "573014348004"; // <-- cambia este número a tu WhatsApp
-      window.open(`https://wa.me/${numero}?text=${mensaje}`, "_blank");
-    }
-</script>
+function generarResumen() {
+    let resumen = "📋 Resumen de pedido - The Family Store\n\n";
+
+    document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
+        resumen += `Pulsera ${i + 1}:\n`;
+
+        pulsera.querySelectorAll(".decoracion").forEach(deco => {
+            let input = deco.querySelector("input");
+            let cantidad = parseInt(input.value) || 0;
+            if (cantidad > 0) {
+                let nombre = deco.querySelector("span").textContent.trim();
+                let precio = parseInt(input.dataset.precio);
+                resumen += `- ${nombre} x${cantidad} = $${(cantidad * precio).toLocaleString("es-CO")} COP\n`;
+            }
+        });
+
+        resumen += "\n";
+    });
+
+    let total = document.getElementById("total").textContent;
+    resumen += `💲 Total: ${total}`;
+    return resumen;
+}
 
 </body>
 
 </html>
+
 
 
 
