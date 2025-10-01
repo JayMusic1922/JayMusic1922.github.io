@@ -352,19 +352,38 @@ function descargarPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    let contenido = generarResumen();
-    contenido = limpiarTexto(contenido); // 👈 aquí limpiamos el texto
+    let contenido = "Resumen de pedido - The Family Store\n\n";
 
-    // Saltos de línea automáticos
+    document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
+        contenido += `Pulsera ${i + 1}:\n`;
+        pulsera.querySelectorAll("input").forEach(input => {
+            let cantidad = parseInt(input.value) || 0;
+            if (cantidad > 0) {
+                let label = input.getAttribute("data-nombre"); // nombre
+                let precio = parseInt(input.getAttribute("data-precio")); // precio
+                let subtotal = cantidad * precio;
+                contenido += `- ${label} ($${precio}) x${cantidad}  $${subtotal.toLocaleString("es-CO")} COP\n`;
+            }
+        });
+        contenido += "\n";
+    });
+
+    // 👇 Corregido: solo sacamos el número del total
+    let totalTexto = document.getElementById("total").textContent;
+    let soloNumero = totalTexto.replace("Total:", "").trim();
+
+    contenido += `Total: ${soloNumero}`;
+
+    // Imprimir en PDF con saltos de línea
     let y = 10;
-    const lineas = contenido.split("\n");
-    lineas.forEach(linea => {
+    contenido.split("\n").forEach(linea => {
         doc.text(linea, 10, y);
         y += 8;
     });
 
     doc.save("pedido.pdf");
 }
+
 
 // 🔹 Enviar por WhatsApp
 function enviarWhatsApp() {
@@ -378,6 +397,7 @@ function enviarWhatsApp() {
 </body>
 
 </html>
+
 
 
 
