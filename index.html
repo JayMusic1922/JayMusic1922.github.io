@@ -240,6 +240,30 @@ function obtenerNombreYPrecio(deco, input) {
   return { nombre, precio };
 }
 
+/* Actualizar totales en pantalla */
+function actualizarTotales() {
+  let totalGeneral = 0;
+  document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
+    let subtotalPulsera = MANO_OBRA;
+
+    pulsera.querySelectorAll(".decoracion").forEach(deco => {
+      const input = deco.querySelector("input");
+      const cantidad = parseInt(input.value || "0", 10);
+      const { precio } = obtenerNombreYPrecio(deco, input);
+      subtotalPulsera += cantidad * precio;
+    });
+
+    const subtotalDiv = pulsera.querySelector(".subtotal");
+    if (subtotalDiv) {
+      subtotalDiv.textContent = `Subtotal: $${subtotalPulsera.toLocaleString("es-CO")} COP`;
+    }
+
+    totalGeneral += subtotalPulsera;
+  });
+
+  document.getElementById("total").textContent = `Total: $${totalGeneral.toLocaleString("es-CO")} COP`;
+}
+
 /* Generar resumen */
 function generarResumenTexto() {
   let resumen = "Resumen de pedido - The Family Store\n\n";
@@ -309,9 +333,47 @@ function enviarWhatsApp() {
   const url = `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
   window.open(url, "_blank");
 }
+
+/* Delegación de eventos */
+document.addEventListener("click", e => {
+  if (e.target.classList.contains("mas")) {
+    const input = e.target.parentElement.querySelector("input");
+    input.value = parseInt(input.value || "0", 10) + 1;
+    actualizarTotales();
+  }
+
+  if (e.target.classList.contains("menos")) {
+    const input = e.target.parentElement.querySelector("input");
+    input.value = Math.max(0, parseInt(input.value || "0", 10) - 1);
+    actualizarTotales();
+  }
+
+  if (e.target.classList.contains("btn-borrar")) {
+    e.target.closest(".pulsera").remove();
+    actualizarTotales();
+  }
+
+  if (e.target.id === "agregarPulsera") {
+    const contenedor = document.getElementById("pulseras");
+    const primera = contenedor.querySelector(".pulsera");
+    const copia = primera.cloneNode(true);
+
+    copia.querySelectorAll("input").forEach(input => input.value = "0");
+    copia.querySelectorAll("textarea").forEach(area => area.value = "");
+    copia.querySelector(".subtotal").textContent = `Subtotal: $${MANO_OBRA.toLocaleString("es-CO")} COP`;
+
+    contenedor.appendChild(copia);
+    actualizarTotales();
+  }
+});
+
+/* Inicializar totales */
+document.addEventListener("DOMContentLoaded", actualizarTotales);
 </script>
+
 </body>
 </html>
+
 
 
 
