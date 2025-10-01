@@ -313,37 +313,7 @@ body::after {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-// Descargar en PDF
-function descargarPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    let contenido = "📋 Resumen de pedido - The Family Store\n\n";
-
-    document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
-        contenido += `Pulsera ${i + 1}:\n`;
-
-        pulsera.querySelectorAll(".decoracion").forEach(deco => {
-    let input = deco.querySelector("input");
-    let cantidad = parseInt(input.value) || 0;
-    if (cantidad > 0) {
-        let nombre = deco.querySelector("span").textContent.trim();
-        let precio = parseInt(input.dataset.precio);
-        contenido += `- ${nombre} x${cantidad} = $${(cantidad * precio).toLocaleString("es-CO")} COP\n`;
-    }
-});
-
-        contenido += "\n";
-    });
-
-    let total = document.getElementById("total").textContent;
-    contenido += `💲 Total: ${total}`;
-
-    doc.text(contenido, 10, 10);
-    doc.save("pedido.pdf");
-}
-
-// Enviar por WhatsApp
+// 🔹 Generar resumen en texto (para PDF y WhatsApp)
 function generarResumen() {
     let resumen = "📋 Resumen de pedido - The Family Store\n\n";
 
@@ -356,7 +326,8 @@ function generarResumen() {
             if (cantidad > 0) {
                 let nombre = deco.querySelector("span").textContent.trim();
                 let precio = parseInt(input.dataset.precio);
-                resumen += `- ${nombre} x${cantidad} = $${(cantidad * precio).toLocaleString("es-CO")} COP\n`;
+                let subtotal = cantidad * precio;
+                resumen += `- ${nombre} x${cantidad} = $${subtotal.toLocaleString("es-CO")} COP\n`;
             }
         });
 
@@ -368,9 +339,37 @@ function generarResumen() {
     return resumen;
 }
 
+// 🔹 Descargar en PDF
+function descargarPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const contenido = generarResumen();
+
+    // Saltos de línea automáticos para no cortar texto
+    let y = 10;
+    const lineas = contenido.split("\n");
+    lineas.forEach(linea => {
+        doc.text(linea, 10, y);
+        y += 8; // espacio entre líneas
+    });
+
+    doc.save("pedido.pdf");
+}
+
+// 🔹 Enviar por WhatsApp
+function enviarWhatsApp() {
+    const resumen = generarResumen();
+    const mensaje = encodeURIComponent(resumen);
+    const numero = "573014348004"; // <-- cambia este número por el tuyo
+    window.open(`https://wa.me/${numero}?text=${mensaje}`, "_blank");
+}
+</script>
+  
 </body>
 
 </html>
+
 
 
 
