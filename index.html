@@ -313,62 +313,70 @@ body::after {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
-  // Descargar en PDF
-  function descargarPDF() {
+// Descargar en PDF
+function descargarPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    let contenido = "Resumen de pedido - The Family Store\n\n";
+    let contenido = "📋 Resumen de pedido - The Family Store\n\n";
 
     document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
-      contenido += `Pulsera ${i + 1}:\n`;
-      pulsera.querySelectorAll("input").forEach(input => {
-        let cantidad = parseInt(input.value) || 0;
-        if (cantidad > 0) {
-          let label = input.previousSibling.textContent.trim();
-          contenido += `   - ${label} x${cantidad}\n`;
-        }
-      });
-      contenido += "\n";
+        contenido += `Pulsera ${i + 1}:\n`;
+
+        pulsera.querySelectorAll(".dije").forEach(dije => {
+            let input = dije.querySelector("input");
+            let cantidad = parseInt(input.value) || 0;
+            if (cantidad > 0) {
+                // Ahora tomamos el texto del dije directamente del span o label
+                let nombreDije = dije.querySelector(".nombre-dije").textContent.trim();
+                contenido += `- ${nombreDije} x${cantidad}\n`;
+            }
+        });
+
+        contenido += "\n";
     });
 
     let total = document.getElementById("total").textContent;
-    contenido += total;
+    contenido += `💲 Total: ${total}`;
 
     doc.text(contenido, 10, 10);
     doc.save("pedido.pdf");
-  }
+}
 
-  // Enviar por WhatsApp
- function enviarWhatsApp() {
-  let mensaje = "Hola, este es mi pedido en The Family Store:\n\n";
+// Enviar por WhatsApp
+function enviarWhatsApp() {
+    let mensaje = "📋 Resumen de pedido - The Family Store\n\n";
 
-  document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
-    mensaje += `Pulsera ${i + 1}:\n`;
-    pulsera.querySelectorAll("input").forEach(input => {
-      let cantidad = parseInt(input.value) || 0;
-      if (cantidad > 0) {
-        let label = input.previousSibling.textContent.trim();
-        mensaje += `   - ${label} x${cantidad}\n`;
-      }
+    document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
+        mensaje += `Pulsera ${i + 1}:\n`;
+
+        pulsera.querySelectorAll(".dije").forEach(dije => {
+            let input = dije.querySelector("input");
+            let cantidad = parseInt(input.value) || 0;
+            if (cantidad > 0) {
+                let nombreDije = dije.querySelector(".nombre-dije").textContent.trim();
+                mensaje += `- ${nombreDije} x${cantidad}\n`;
+            }
+        });
+
+        mensaje += "\n";
     });
-    mensaje += "\n";
-  });
 
-  let total = document.getElementById("total").textContent;
-  mensaje += total;
+    let total = document.getElementById("total").textContent;
+    mensaje += `💲 Total: ${total}`;
 
-  // 👇 Aquí pones tu número
-  let numero = "573014348004"; // ejemplo
-  let url = "https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje);
+    // Número fijo de WhatsApp (cámbialo por el tuyo en formato internacional)
+    let numero = "573001234567"; 
+    let url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
 
-  window.open(url, "_blank");
+    window.open(url, "_blank");
 }
 </script>
 
 </body>
 
 </html>
+
 
 
 
