@@ -3,71 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <title>The Family Store</title>
+  <!-- jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #fdfdfd; }
-    h1 { text-align: center; color: #333; }
-    .pulsera { border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 10px; }
-    button { padding: 10px; margin: 5px; border-radius: 8px; cursor: pointer; }
-    .btn { background: #333; color: white; }
-    .btn:hover { background: #555; }
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;                     /* top:0; right:0; bottom:0; left:0; */
-  background: url("fondo.png") center/cover no-repeat;
-  filter: blur(8px) brightness(0.7);
-  transform: scale(1.05);       /* evitar bordes visibles por el blur */
-  z-index: -2;
-  will-change: transform, filter;
-}
-
-/* Layer: oscurecer/atenuar el fondo para mejor contraste */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.25); /* ajusta la opacidad a tu gusto */
-  z-index: -1;
-}
-
-/* Tu contenedor principal debe estar por encima */
-.contenedor {
-  position: relative;
-  z-index: 1;
-  /* si quieres que la tarjeta también tenga un ligero blur por detrás */
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(2px); /* bonito toque; no lo usa todo navegador, pero está bien */
-  -webkit-backdrop-filter: blur(2px);
-  /* resto del estilo ya existente */
-}
-
-
-  </style>
-</head>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>The Family Store</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background: #f7f7f7;
       color: #222;
+    }
+
+    /* Fondo difuminado */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: url("fondo.png") center/cover no-repeat;
+      filter: blur(8px) brightness(0.7);
+      transform: scale(1.05);
+      z-index: -2;
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.25);
+      z-index: -1;
     }
 
     .contenedor {
       max-width: 700px;
       margin: 40px auto;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255,255,255,0.9);
       padding: 25px;
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      position: relative;
+      z-index: 1;
     }
 
     h1 {
@@ -163,12 +136,37 @@ body::after {
     #agregarPulsera:hover {
       background: #2e7d32;
     }
+
+    .botones-exportar {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .botones-exportar button {
+      background: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .botones-exportar button:hover {
+      background: #45a049;
+    }
+
+    .botones-exportar .whatsapp {
+      background: #25D366;
+    }
+    .botones-exportar .whatsapp:hover {
+      background: #1ebe5d;
+    }
   </style>
 </head>
 <body>
-   <div class="contenedor">
+  <div class="contenedor">
     <h1><img src="logo.png" alt="logo" style="height:50px; vertical-align:middle;"> The Family Store</h1>
-    <p>Arma tus pulseras con las decoraciones que quieras. 🧡🖤 </p> 
+    <p>Arma tus pulseras con las decoraciones que quieras. 🧡🖤</p>
 
     <div id="pulseras">
       <div class="pulsera">
@@ -209,12 +207,13 @@ body::after {
             <button class="mas">+</button>
           </div>
         </div>
-        
- <div style="margin-top:15px;">
-    <label>Detalles (color, grosor, etc):</label>
-    <textarea class="notas" rows="2" 
-              style="width:100%; border-radius:8px; padding:8px; margin-top:5px; border:1px solid #ccc; resize:vertical;"></textarea>
-  </div>
+
+        <div style="margin-top:15px;">
+          <label>Detalles (color, grosor, etc):</label>
+          <textarea class="notas" rows="2"
+                    style="width:100%; border-radius:8px; padding:8px; margin-top:5px; border:1px solid #ccc; resize:vertical;"></textarea>
+        </div>
+
         <div class="subtotal">Subtotal: $2000 COP</div>
       </div>
     </div>
@@ -222,34 +221,29 @@ body::after {
     <button id="agregarPulsera">➕ Agregar otra pulsera</button>
     <div id="total">Total: $2000 COP</div>
 
-     <div style="margin-top:20px; text-align:center;">
-  <button onclick="descargarPDF()" 
-          style="background:#4CAF50;color:white;padding:10px 15px;margin:5px;border:none;border-radius:8px;cursor:pointer;">
-    📄 Descargar Vale en PDF
-  </button>
-
-  <button onclick="enviarWhatsApp()" 
-          style="background:#25D366;color:white;padding:10px 15px;margin:5px;border:none;border-radius:8px;cursor:pointer;">
-    💬 Enviar por WhatsApp
-  </button>
-</div>
+    <div class="botones-exportar">
+      <button onclick="descargarPDF()">📄 Descargar Vale en PDF</button>
+      <button class="whatsapp" onclick="enviarWhatsApp()">💬 Enviar por WhatsApp</button>
+    </div>
   </div>
 
- <script>
-const MANO_OBRA = 2000; // valor fijo de mano de obra
+<script>
+const WHATSAPP_NUM = "573014348004"; 
+const MANO_OBRA = 2000;
 
-// 🔹 Función para extraer nombre y precio de cada item
+/* Extraer nombre y precio */
 function obtenerNombreYPrecio(deco, input) {
-  const nombre = deco.querySelector("label")?.innerText || "Producto";
-  const precio = parseInt(input.dataset.precio || "0", 10) || 0;
+  const span = deco.querySelector("span");
+  let textoSpan = span ? span.textContent.trim() : "";
+  const nombre = textoSpan.replace(/\s*\(\s*\$?[0-9.,]+\s*\)\s*$/g, "").trim();
+  const precio = parseInt(input.dataset.precio || "0", 10);
   return { nombre, precio };
 }
 
-// 🔹 Función que calcula el resumen completo
+/* Generar resumen */
 function generarResumenTexto() {
   let resumen = "Resumen de pedido - The Family Store\n\n";
   let totalGeneral = 0;
-
   const pulseras = document.querySelectorAll(".pulsera");
 
   if (pulseras.length === 0) {
@@ -257,151 +251,26 @@ function generarResumenTexto() {
   }
 
   pulseras.forEach((pulsera, i) => {
-    resumen += `Pulsera ${i + 1}:\n`;
+    resumen += `Pulsera ${i+1}:\n`;
     let subtotalPulsera = MANO_OBRA;
 
-    // recorrer todos los items de la pulsera
     pulsera.querySelectorAll(".decoracion").forEach(deco => {
       const input = deco.querySelector("input");
-      if (!input) return;
-
-      const cantidad = parseInt(input.value || "0", 10) || 0;
-      if (cantidad <= 0) return;
-
-      const { nombre, precio } = obtenerNombreYPrecio(deco, input);
-      const subtotalItem = cantidad * precio;
-
-      resumen += ` - ${nombre} ($${precio.toLocaleString("es-CO")}) x${cantidad} = $${subtotalItem.toLocaleString("es-CO")} COP\n`;
-      subtotalPulsera += subtotalItem;
+      const cantidad = parseInt(input.value || "0", 10);
+      if (cantidad > 0) {
+        const { nombre, precio } = obtenerNombreYPrecio(deco, input);
+        const subtotalItem = cantidad * precio;
+        resumen += ` - ${nombre} ($${precio.toLocaleString("es-CO")}) x${cantidad} = $${subtotalItem.toLocaleString("es-CO")} COP\n`;
+        subtotalPulsera += subtotalItem;
+      }
     });
 
-    // notas escritas por el cliente
     const notas = pulsera.querySelector(".notas")?.value.trim();
-    if (notas) {
-      resumen += `   Notas del cliente: ${notas}\n`;
-    }
-
-    resumen += ` Mano de obra: $${MANO_OBRA.toLocaleString("es-CO")} COP\n`;
-    resumen += ` Subtotal Pulsera ${i + 1}: $${subtotalPulsera.toLocaleString("es-CO")} COP\n\n`;
-    totalGeneral += subtotalPulsera;
-  });
-
-  resumen += `Total: $${totalGeneral.toLocaleString("es-CO")} COP\n`;
-
-  return { texto: resumen, total: totalGeneral };
-}
-
-// 🔹 Actualiza el área de resultados en pantalla
-function actualizarResumen() {
-  const { texto } = generarResumenTexto();
-  document.getElementById("resultado").textContent = texto;
-}
-
-// 🔹 Botón para enviar a WhatsApp
-function enviarWhatsApp() {
-  const { texto } = generarResumenTexto();
-  const telefono = "573001234567"; // ← cambia a tu número
-  const url = `https://wa.me/${telefono}?text=${encodeURIComponent(texto)}`;
-  window.open(url, "_blank");
-}
-
-// 🔹 Botón para generar PDF
-function generarPDF() {
-  const { texto } = generarResumenTexto();
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(12);
-  doc.text(texto, 10, 10);
-  doc.save("vale_pedido.pdf");
-}
-</script>
-
-  <!-- Botones de exportar -->
-
-
-<!-- Librería jsPDF (para generar PDF) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
-/* --- CONFIG --- */
-const WHATSAPP_NUM = "573014348004"; // <- pon tu número en formato internacional
-const MANO_OBRA = 2000; // si en tu proyecto usas otro valor, cámbialo aquí
-
-/* --- Helpers --- */
-// Extrae nombre y precio desde la estructura: <div class="decoracion"><span>Nombre ($precio)</span> ... <input data-precio="..."></div>
-function obtenerNombreYPrecio(deco, input) {
-  // nombre desde el <span>
-  const span = deco.querySelector("span");
-  let textoSpan = span ? span.textContent.trim() : "";
-  // quitar el "( $... )" para sacar solo el nombre
-  const nombre = textoSpan.replace(/\s*\(\s*\$?[0-9.,]+\s*\)\s*$/g, "").trim() || (input.dataset?.nombre || "Decoracion");
-
-  // precio: primero intentar data-precio, si no, parsear del span
-  let precio = 0;
-  if (input && input.dataset && input.dataset.precio) {
-    precio = parseInt(input.dataset.precio, 10) || 0;
-  } else {
-    const m = textoSpan.match(/\$?([0-9.,]+)/);
-    if (m) {
-      precio = parseInt(m[1].replace(/\./g,"").replace(/,/g,""), 10) || 0;
-    }
-  }
-
-  return { nombre, precio };
-}
-
-// Limpia texto para PDF (jsPDF a veces no soporta bien caracteres UTF-8)
-// Solo se usa antes de crear el PDF; WhatsApp recibirá el texto original con acentos.
-function sanearParaPDF(texto) {
-  // normalizar y quitar diacríticos (á -> a), luego eliminar caracteres no ascii imprimibles
-  let t = texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  // permitir caracteres básicos, números, signos de puntuación, espacios y saltos de línea
-  t = t.replace(/[^\x20-\x7E\n]/g, "");
-  return t;
-}
-
-/* --- Generar resumen (texto con nombres, cantidades y subtotales) --- */
-function generarResumenTexto() {
-  let resumen = "Resumen de pedido - The Family Store\n\n";
-  let totalGeneral = 0;
-
-  const pulseras = document.querySelectorAll(".pulsera");
-  if (pulseras.length === 0) {
-    resumen += "No hay pulseras seleccionadas.\n\n";
-  }
-
- pulseras.forEach((pulsera, i) => {
-  resumen += `Pulsera ${i+1}:\n`;
-  let subtotalPulsera = MANO_OBRA;
-
-  // recorrer las decoraciones
-  pulsera.querySelectorAll(".decoracion").forEach(deco => {
-    const input = deco.querySelector("input");
-    if (!input) return;
-    const cantidad = parseInt(input.value || "0", 10) || 0;
-    if (cantidad <= 0) return;
-
-    const { nombre, precio } = obtenerNombreYPrecio(deco, input);
-    const subtotalItem = cantidad * precio;
-    resumen += ` - ${nombre} ($${precio.toLocaleString("es-CO")}) x${cantidad} = $${subtotalItem.toLocaleString("es-CO")} COP\n`;
-    subtotalPulsera += subtotalItem;
-  });
-
-  // 👇 Agregar notas escritas por el cliente
-  const notas = pulsera.querySelector(".notas")?.value.trim();
-  if (notas) {
-    resumen += `   Notas del cliente: ${notas}\n`;
-  }
-
-  resumen += ` Mano de obra: $${MANO_OBRA.toLocaleString("es-CO")} COP\n`;
-  resumen += ` Subtotal Pulsera ${i+1}: $${subtotalPulsera.toLocaleString("es-CO")} COP\n\n`;
-  totalGeneral += subtotalPulsera;
-});
-
+    if (notas) resumen += `   Notas: ${notas}\n`;
 
     resumen += ` Mano de obra: $${MANO_OBRA.toLocaleString("es-CO")} COP\n`;
     resumen += ` Subtotal Pulsera ${i+1}: $${subtotalPulsera.toLocaleString("es-CO")} COP\n\n`;
+
     totalGeneral += subtotalPulsera;
   });
 
@@ -409,54 +278,42 @@ function generarResumenTexto() {
   return { texto: resumen, total: totalGeneral };
 }
 
-/* --- Descargar PDF (usa jsPDF) --- */
+/* Descargar PDF */
 function descargarPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: "pt", format: "a4" });
 
-  const resumenObj = generarResumenTexto();
-  // Sanear para evitar caracteres raros en el PDF
-  const contenido = sanearParaPDF(resumenObj.texto);
+  const { texto } = generarResumenTexto();
+  const lines = doc.splitTextToSize(texto, 520);
 
-  // dibujar texto en PDF con saltos de línea automáticos
-  const lineHeight = 14;
-  let x = 40;
-  let y = 40;
-  const pageHeightLimit = 800;
-
-  const lines = doc.splitTextToSize(contenido, 520);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(12);
-  for (let i = 0; i < lines.length; i++) {
-    if (y > pageHeightLimit) {
+
+  let y = 40;
+  lines.forEach(line => {
+    if (y > 800) {
       doc.addPage();
       y = 40;
     }
-    doc.text(lines[i], x, y);
-    y += lineHeight;
-  }
+    doc.text(line, 40, y);
+    y += 14;
+  });
 
   doc.save("vale_compra.pdf");
 }
 
-/* --- Enviar por WhatsApp (abre conversación al número fijo) --- */
+/* Enviar por WhatsApp */
 function enviarWhatsApp() {
-  const resumenObj = generarResumenTexto();
-  const mensaje = resumenObj.texto; // NO lo saneamos: WhatsApp admite UTF-8 y acentos
+  const { texto } = generarResumenTexto();
   const numero = WHATSAPP_NUM.replace(/\D/g, "");
-  const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+  const url = `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
   window.open(url, "_blank");
 }
-
-/* --- Exponer en window si quieres (opcional) ) --- */
-window.generarResumenTexto = generarResumenTexto;
-window.descargarPDF = descargarPDF;
-window.enviarWhatsApp = enviarWhatsApp;
 </script>
-
 </body>
-
 </html>
+
+
 
 
 
