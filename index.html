@@ -345,37 +345,17 @@ function descargarPDF() {
 
 // Enviar por WhatsApp
 function enviarWhatsApp() {
-    let mensaje = "📋 Resumen de pedido - The Family Store\n\n";
-
-    document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
-        mensaje += `Pulsera ${i + 1}:\n`;
-
-        pulsera.querySelectorAll(".dije").forEach(dije => {
-            let input = dije.querySelector("input");
-            let cantidad = parseInt(input.value) || 0;
-            if (cantidad > 0) {
-                let nombreDije = dije.querySelector(".nombre-dije").textContent.trim();
-                mensaje += `- ${nombreDije} x${cantidad}\n`;
-            }
-        });
-
-        mensaje += "\n";
-    });
-
-    let total = document.getElementById("total").textContent;
-    mensaje += `💲 Total: ${total}`;
-
-    // Número fijo de WhatsApp (cámbialo por el tuyo en formato internacional)
-    let numero = "573001234567"; 
-    let url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
-
-    window.open(url, "_blank");
-}
+      const resumen = generarResumen();
+      const mensaje = encodeURIComponent(resumen);
+      const numero = "573014348004"; // <-- cambia este número a tu WhatsApp
+      window.open(`https://wa.me/${numero}?text=${mensaje}`, "_blank");
+    }
 </script>
 
 </body>
 
 </html>
+
 
 
 
