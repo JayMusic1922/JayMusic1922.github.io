@@ -340,18 +340,27 @@ function generarResumen() {
 }
 
 // 🔹 Descargar en PDF
+function limpiarTexto(texto) {
+    return texto
+        .normalize("NFD") // separa acentos
+        .replace(/[\u0300-\u036f]/g, "") // elimina marcas de acentos
+        .replace(/[^a-zA-Z0-9$.,:;@()\-\s]/g, ""); // filtra símbolos raros
+}
+
+// 🔹 Descargar en PDF con jsPDF
 function descargarPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    const contenido = generarResumen();
+    let contenido = generarResumen();
+    contenido = limpiarTexto(contenido); // 👈 aquí limpiamos el texto
 
-    // Saltos de línea automáticos para no cortar texto
+    // Saltos de línea automáticos
     let y = 10;
     const lineas = contenido.split("\n");
     lineas.forEach(linea => {
         doc.text(linea, 10, y);
-        y += 8; // espacio entre líneas
+        y += 8;
     });
 
     doc.save("pedido.pdf");
@@ -369,6 +378,7 @@ function enviarWhatsApp() {
 </body>
 
 </html>
+
 
 
 
