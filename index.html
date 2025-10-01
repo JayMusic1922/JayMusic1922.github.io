@@ -235,84 +235,88 @@ body::after {
 </div>
   </div>
 
-  <script>
-    function calcularTotal() {
-      let total = 0;
-      const pulseras = document.querySelectorAll(".pulsera");
+ <script>
+const MANO_OBRA = 2000; // valor fijo de mano de obra
 
-      pulseras.forEach(pulsera => {
-        let subtotal = 2000; // mano de obra
-        const decoraciones = pulsera.querySelectorAll("input");
+// 🔹 Función para extraer nombre y precio de cada item
+function obtenerNombreYPrecio(deco, input) {
+  const nombre = deco.querySelector("label")?.innerText || "Producto";
+  const precio = parseInt(input.dataset.precio || "0", 10) || 0;
+  return { nombre, precio };
+}
 
-        decoraciones.forEach(input => {
-          const cantidad = parseInt(input.value) || 0;
-          const precio = parseInt(input.dataset.precio);
-          subtotal += cantidad * precio;
-        });
+// 🔹 Función que calcula el resumen completo
+function generarResumenTexto() {
+  let resumen = "Resumen de pedido - The Family Store\n\n";
+  let totalGeneral = 0;
 
-        pulsera.querySelector(".subtotal").innerText =
-          "Subtotal: $" + subtotal.toLocaleString("es-CO") + " COP";
+  const pulseras = document.querySelectorAll(".pulsera");
 
-        total += subtotal;
-      });
+  if (pulseras.length === 0) {
+    resumen += "No hay pulseras seleccionadas.\n\n";
+  }
 
-      document.getElementById("total").innerText =
-        "Total: $" + total.toLocaleString("es-CO") + " COP";
-    }
+  pulseras.forEach((pulsera, i) => {
+    resumen += `Pulsera ${i + 1}:\n`;
+    let subtotalPulsera = MANO_OBRA;
 
-    function activarBotones(pulsera) {
-      pulsera.querySelectorAll(".contador").forEach(contador => {
-        const input = contador.querySelector("input");
-        const mas = contador.querySelector(".mas");
-        const menos = contador.querySelector(".menos");
+    // recorrer todos los items de la pulsera
+    pulsera.querySelectorAll(".decoracion").forEach(deco => {
+      const input = deco.querySelector("input");
+      if (!input) return;
 
-        mas.addEventListener("click", () => {
-          input.value = parseInt(input.value) + 1;
-          calcularTotal();
-        });
+      const cantidad = parseInt(input.value || "0", 10) || 0;
+      if (cantidad <= 0) return;
 
-        menos.addEventListener("click", () => {
-          if (parseInt(input.value) > 0) {
-            input.value = parseInt(input.value) - 1;
-            calcularTotal();
-          }
-        });
-      });
+      const { nombre, precio } = obtenerNombreYPrecio(deco, input);
+      const subtotalItem = cantidad * precio;
 
-      const btnBorrar = pulsera.querySelector(".btn-borrar");
-      btnBorrar.addEventListener("click", () => {
-        if (confirm("¿Seguro que quieres eliminar esta pulsera?")) {
-          pulsera.remove();
-          renumerarPulseras();
-          calcularTotal();
-        }
-      });
-    }
-
-    function renumerarPulseras() {
-      document.querySelectorAll(".pulsera h3").forEach((h3, index) => {
-        h3.firstChild.textContent = "Pulsera " + (index + 1) + " ";
-      });
-    }
-
-    document.querySelectorAll(".pulsera").forEach(activarBotones);
-
-    document.getElementById("agregarPulsera").addEventListener("click", () => {
-      const pulseraOriginal = document.querySelector(".pulsera");
-      const nueva = pulseraOriginal.cloneNode(true);
-
-      nueva.querySelectorAll("input").forEach(input => {
-        input.value = 0;
-      });
-
-      document.getElementById("pulseras").appendChild(nueva);
-      activarBotones(nueva);
-      renumerarPulseras();
-      calcularTotal();
+      resumen += ` - ${nombre} ($${precio.toLocaleString("es-CO")}) x${cantidad} = $${subtotalItem.toLocaleString("es-CO")} COP\n`;
+      subtotalPulsera += subtotalItem;
     });
 
-    calcularTotal();
-  </script>
+    // notas escritas por el cliente
+    const notas = pulsera.querySelector(".notas")?.value.trim();
+    if (notas) {
+      resumen += `   Notas del cliente: ${notas}\n`;
+    }
+
+    resumen += ` Mano de obra: $${MANO_OBRA.toLocaleString("es-CO")} COP\n`;
+    resumen += ` Subtotal Pulsera ${i + 1}: $${subtotalPulsera.toLocaleString("es-CO")} COP\n\n`;
+    totalGeneral += subtotalPulsera;
+  });
+
+  resumen += `Total: $${totalGeneral.toLocaleString("es-CO")} COP\n`;
+
+  return { texto: resumen, total: totalGeneral };
+}
+
+// 🔹 Actualiza el área de resultados en pantalla
+function actualizarResumen() {
+  const { texto } = generarResumenTexto();
+  document.getElementById("resultado").textContent = texto;
+}
+
+// 🔹 Botón para enviar a WhatsApp
+function enviarWhatsApp() {
+  const { texto } = generarResumenTexto();
+  const telefono = "573001234567"; // ← cambia a tu número
+  const url = `https://wa.me/${telefono}?text=${encodeURIComponent(texto)}`;
+  window.open(url, "_blank");
+}
+
+// 🔹 Botón para generar PDF
+function generarPDF() {
+  const { texto } = generarResumenTexto();
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(12);
+  doc.text(texto, 10, 10);
+  doc.save("vale_pedido.pdf");
+}
+</script>
+
   <!-- Botones de exportar -->
 
 
@@ -453,6 +457,7 @@ window.enviarWhatsApp = enviarWhatsApp;
 </body>
 
 </html>
+
 
 
 
