@@ -367,23 +367,34 @@ function generarResumenTexto() {
     resumen += "No hay pulseras seleccionadas.\n\n";
   }
 
-  pulseras.forEach((pulsera, i) => {
-    resumen += `Pulsera ${i+1}:\n`;
-    // Mano de obra por pulsera
-    let subtotalPulsera = MANO_OBRA;
+ pulseras.forEach((pulsera, i) => {
+  resumen += `Pulsera ${i+1}:\n`;
+  let subtotalPulsera = MANO_OBRA;
 
-    // recorrer las decoraciones (cada .decoracion)
-    pulsera.querySelectorAll(".decoracion").forEach(deco => {
-      const input = deco.querySelector("input");
-      if (!input) return;
-      const cantidad = parseInt(input.value || "0", 10) || 0;
-      if (cantidad <= 0) return;
+  // recorrer las decoraciones
+  pulsera.querySelectorAll(".decoracion").forEach(deco => {
+    const input = deco.querySelector("input");
+    if (!input) return;
+    const cantidad = parseInt(input.value || "0", 10) || 0;
+    if (cantidad <= 0) return;
 
-      const { nombre, precio } = obtenerNombreYPrecio(deco, input);
-      const subtotalItem = cantidad * precio;
-      resumen += ` - ${nombre} ($${precio.toLocaleString("es-CO")}) x${cantidad} = $${subtotalItem.toLocaleString("es-CO")} COP\n`;
-      subtotalPulsera += subtotalItem;
-    });
+    const { nombre, precio } = obtenerNombreYPrecio(deco, input);
+    const subtotalItem = cantidad * precio;
+    resumen += ` - ${nombre} ($${precio.toLocaleString("es-CO")}) x${cantidad} = $${subtotalItem.toLocaleString("es-CO")} COP\n`;
+    subtotalPulsera += subtotalItem;
+  });
+
+  // 👇 Agregar notas escritas por el cliente
+  const notas = pulsera.querySelector(".notas")?.value.trim();
+  if (notas) {
+    resumen += `   Notas del cliente: ${notas}\n`;
+  }
+
+  resumen += ` Mano de obra: $${MANO_OBRA.toLocaleString("es-CO")} COP\n`;
+  resumen += ` Subtotal Pulsera ${i+1}: $${subtotalPulsera.toLocaleString("es-CO")} COP\n\n`;
+  totalGeneral += subtotalPulsera;
+});
+
 
     resumen += ` Mano de obra: $${MANO_OBRA.toLocaleString("es-CO")} COP\n`;
     resumen += ` Subtotal Pulsera ${i+1}: $${subtotalPulsera.toLocaleString("es-CO")} COP\n\n`;
@@ -442,6 +453,7 @@ window.enviarWhatsApp = enviarWhatsApp;
 </body>
 
 </html>
+
 
 
 
