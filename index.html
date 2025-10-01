@@ -216,6 +216,18 @@ body::after {
 
     <button id="agregarPulsera">➕ Agregar otra pulsera</button>
     <div id="total">Total: $2000 COP</div>
+
+     <div style="margin-top:20px; text-align:center;">
+  <button onclick="descargarPDF()" 
+          style="background:#4CAF50;color:white;padding:10px 15px;margin:5px;border:none;border-radius:8px;cursor:pointer;">
+    📄 Descargar Vale en PDF
+  </button>
+
+  <button onclick="enviarWhatsApp()" 
+          style="background:#25D366;color:white;padding:10px 15px;margin:5px;border:none;border-radius:8px;cursor:pointer;">
+    💬 Enviar por WhatsApp
+  </button>
+</div>
   </div>
 
   <script>
@@ -297,17 +309,7 @@ body::after {
     calcularTotal();
   </script>
   <!-- Botones de exportar -->
-<div style="margin-top:20px; text-align:center;">
-  <button onclick="descargarPDF()" 
-          style="background:#4CAF50;color:white;padding:10px 15px;margin:5px;border:none;border-radius:8px;cursor:pointer;">
-    📄 Descargar Vale en PDF
-  </button>
 
-  <button onclick="enviarWhatsApp()" 
-          style="background:#25D366;color:white;padding:10px 15px;margin:5px;border:none;border-radius:8px;cursor:pointer;">
-    💬 Enviar por WhatsApp
-  </button>
-</div>
 
 <!-- Librería jsPDF (para generar PDF) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -435,6 +437,7 @@ window.enviarWhatsApp = enviarWhatsApp;
 </body>
 
 </html>
+
 
 
 
