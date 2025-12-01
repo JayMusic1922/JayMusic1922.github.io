@@ -71,6 +71,78 @@
       color: #d32f2f;
     }
 
+.decoracion {
+        border: 1px solid #f0f0f0;
+        padding: 8px 10px;
+        margin: 10px 0;
+        border-radius: 6px;
+        background: #fafafa;
+    }
+
+    .decoracion summary {
+        cursor: pointer;
+        font-weight: bold;
+        padding: 5px 0;
+        list-style: none; /* Oculta la flecha por defecto */
+        display: flex;
+        align-items: center;
+        /* Estilo personalizado de flecha */
+    }
+    .decoracion summary::before {
+        content: '▶️'; /* Flecha derecha */
+        margin-right: 10px;
+        transition: transform 0.2s;
+    }
+    .decoracion[open] summary::before {
+        content: '🔽'; /* Flecha abajo */
+        transform: rotate(90deg);
+    }
+    
+    .contenido-decoracion {
+        padding-top: 10px;
+        border-top: 1px solid #eee;
+    }
+
+.item-decoracion {
+    display: flex; 
+    /* Volvemos a space-between para que la PIEDRERÍA use todo el ancho */
+    justify-content: space-between; 
+    
+    align-items: center; 
+    margin-bottom: 15px; 
+    padding: 5px 0;
+    border-bottom: 1px dotted #ccc;
+}
+
+/* Añade esta nueva regla a tu bloque <style> */
+.item-centrado {
+    /* Centra el contenido en el medio */
+    justify-content: center; 
+    /* Añade un espacio controlado entre los dos componentes (grupo-visual y contador) */
+    gap: 40px; 
+}
+
+/* Si el nombre y la imagen están separados, ajustamos el espaciado entre los elementos */
+.item-decoracion > span, 
+.item-decoracion > img,
+.item-decoracion > .contador {
+    align-self: center; /* Asegura que cada hijo se centre a sí mismo */
+}
+
+/* Añade esta nueva regla a tu bloque <style> */
+.grupo-visual {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    gap: 5px; 
+}
+
+.contador {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
     .decoracion {
       margin: 10px 0;
       display: flex;
@@ -166,56 +238,74 @@
 <body>
   <div class="contenedor">
     <h1><img src="logo.png" alt="logo" style="height:150px; vertical-align:middle;"> The Family Store</h1>
-    <p>Cada pulsera tiene un costo fijo de 3.000$ Sientete libre y Arma tus pulseras con las decoraciones que quieras. 🧡🖤</p>
+    <p>Cada pulsera tiene un costo fijo de $3.000 COP Sientete libre y Arma tus pulseras con las decoraciones que quieras. 🧡🖤</p>
 
     <div id="pulseras">
       <div class="pulsera">
-        <h3>Pulsera 1 <button class="btn-borrar">🗑️</button></h3>
+        <h3>Pulsera <button class="btn-borrar">🗑️</button></h3>
 
-        <div class="decoracion">
-          <span>Letras ($50)</span><br><br><img src="letras.png" alt="logo" style="height:200px; vertical-align:middle;">
-          <div class="contador">
-            <button class="menos">-</button>
-            <input type="text" value="0" readonly data-precio="50">
-            <button class="mas">+</button>
-          </div>
-        </div>
+        <details class="decoracion" ...>
+  <summary> Piedreria ($100) </summary>
+    <div class="contenido-decoracion">
+        
+                <div class="item-decoracion"> 
+            <img src="letras.png" alt="letras" style="height:100px;">
+            <div class="contador">
+                <button class="menos">-</button>
+                <input type="text" value="0" readonly data-precio="100" data-nombre="Letras">
+                <button class="mas">+</button>
+            </div>
+        </div>
 
-        <div class="decoracion">
-          <span>Dijes ($1000)</span><br><br><img src="dijes.png" alt="logo" style="height:200px; vertical-align:middle;">
-          <div class="contador">
-            <button class="menos">-</button>
-            <input type="text" value="0" readonly data-precio="1000">
-            <button class="mas">+</button>
-          </div>
-        </div>
+          <div class="item-decoracion">
+              <img src="corazón.png" alt="piedra corazón" style="height:100px;">
+              <div class="contador">
+                <button class="menos">-</button>
+                <input type="text" value="0" readonly data-precio="100" data-nombre="Piedra Corazón">
+                <button class="mas">+</button>
+              </div>
+            </div>
 
-        <div class="decoracion">
-          <span>piedra forma de corazón ($50)</span><br><img src="corazón.png" alt="logo" style="height:200px; vertical-align:middle;">
-          <div class="contador">
-            <button class="menos">-</button>
-            <input type="text" value="0" readonly data-precio="50">
-            <button class="mas">+</button>
-          </div>
-        </div>
+          <div class="item-decoracion">
+              <img src="rosas.png" alt="piedra rosa" style="height:100px;">
+              <div class="contador">
+                <button class="menos">-</button>
+                <input type="text" value="0" readonly data-precio="100" data-nombre="Piedra Rosa">
+                <button class="mas">+</button>
+              </div>
+            </div>
 
-        <div class="decoracion">
-          <span>piedra forma de rosa x4 ($100)</span><br><img src="rosas.png" alt="logo" style="height:200px; vertical-align:middle;">
-          <div class="contador">
-            <button class="menos">-</button>
-            <input type="text" value="0" readonly data-precio="100">
-            <button class="mas">+</button>
-          </div>
-        </div>
+          <div class="item-decoracion">
+              <img src="solido.png" alt="piedra solido" style="height:100px;">
+              <div class="contador">
+                <button class="menos">-</button>
+                <input type="text" value="0" readonly data-precio="100" data-nombre="Piedra Sólido">
+                <button class="mas">+</button>
+              </div>
+            </div>
 
-        <div class="decoracion">
-          <span>piedra color solido x4 ($100)</span><br><img src="solido.png" alt="logo" style="height:200px; vertical-align:middle;">
-          <div class="contador">
-            <button class="menos">-</button>
-            <input type="text" value="0" readonly data-precio="100">
-            <button class="mas">+</button>
-          </div>
-        </div>
+    </div>
+</details>
+
+      <details class="decoracion">
+  <summary>Dijes</summary>
+    <div class="contenido-decoracion">
+
+        <div class="item-decoracion item-centrado">           
+            <div class="grupo-visual">
+              <span>($1000)</span> 
+              <img src="dijes.png" alt="dijes" style="height:100px;">
+            </div>
+            
+            <div class="contador">
+                <button class="menos">-</button>
+                <input type="text" value="0" readonly data-precio="1000" data-nombre="Dijes">
+                <button class="mas">+</button>
+            </div>
+        </div>
+
+    </div>
+</details>
 
 
         <div style="margin-top:15px;">
@@ -241,75 +331,76 @@
 const WHATSAPP_NUM = "573014348004"; 
 const MANO_OBRA = 3000;
 
-/* Extraer nombre y precio */
-function obtenerNombreYPrecio(deco, input) {
-  const span = deco.querySelector("span");
-  let textoSpan = span ? span.textContent.trim() : "";
-  const nombre = textoSpan.replace(/\s*\(\s*\$?[0-9.,]+\s*\)\s*$/g, "").trim();
-  const precio = parseInt(input.dataset.precio || "0", 10);
-  return { nombre, precio };
+/* Extraer nombre y precio de forma robusta (usando data attributes del input) */
+function obtenerNombreYPrecio(input) {
+  // El nombre se lee directamente de input.dataset.nombre (e.g., "Letras")
+  const nombre = input.dataset.nombre || "Artículo sin nombre";
+  const precio = parseInt(input.dataset.precio || "0", 10);
+  return { nombre, precio };
 }
 
-/* Actualizar totales en pantalla */
+/* Actualizar totales en pantalla (CORREGIDO) */
 function actualizarTotales() {
-  let totalGeneral = 0;
-  document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
-    let subtotalPulsera = MANO_OBRA;
+  let totalGeneral = 0;
+  document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
+    let subtotalPulsera = MANO_OBRA;
 
-    pulsera.querySelectorAll(".decoracion").forEach(deco => {
-      const input = deco.querySelector("input");
-      const cantidad = parseInt(input.value || "0", 10);
-      const { precio } = obtenerNombreYPrecio(deco, input);
-      subtotalPulsera += cantidad * precio;
-    });
+    // CAMBIO CLAVE: Iterar sobre TODOS los inputs de cantidad dentro de la pulsera
+    pulsera.querySelectorAll(".item-decoracion input[type='text']").forEach(input => {
+      const cantidad = parseInt(input.value || "0", 10);
+      // La función obtenerNombreYPrecio ahora solo necesita el input
+      const { precio } = obtenerNombreYPrecio(input);
+      subtotalPulsera += cantidad * precio;
+    });
+    
+    const subtotalDiv = pulsera.querySelector(".subtotal");
+    if (subtotalDiv) {
+      subtotalDiv.textContent = `Subtotal: $${subtotalPulsera.toLocaleString("es-CO")} COP`;
+    }
 
-    const subtotalDiv = pulsera.querySelector(".subtotal");
-    if (subtotalDiv) {
-      subtotalDiv.textContent = `Subtotal: $${subtotalPulsera.toLocaleString("es-CO")} COP`;
-    }
+    totalGeneral += subtotalPulsera;
+  });
 
-    totalGeneral += subtotalPulsera;
-  });
-
-  document.getElementById("total").textContent = `Total: $${totalGeneral.toLocaleString("es-CO")} COP`;
+  document.getElementById("total").textContent = `Total: $${totalGeneral.toLocaleString("es-CO")} COP`;
 }
 
-/* Generar resumen */
+/* Generar resumen (CORREGIDO) */
 function generarResumenTexto() {
-  let resumen = "Resumen de pedido - The Family Store\n\n";
-  let totalGeneral = 0;
-  const pulseras = document.querySelectorAll(".pulsera");
+  let resumen = "Resumen de pedido - The Family Store\n\n";
+  let totalGeneral = 0;
+  const pulseras = document.querySelectorAll(".pulsera");
 
-  if (pulseras.length === 0) {
-    resumen += "No hay pulseras seleccionadas.\n\n";
-  }
+  if (pulseras.length === 0) {
+    resumen += "No hay pulseras seleccionadas.\n\n";
+  }
 
-  pulseras.forEach((pulsera, i) => {
-    resumen += `Pulsera ${i+1}:\n`;
-    let subtotalPulsera = MANO_OBRA;
+  pulseras.forEach((pulsera, i) => {
+    resumen += `Pulsera ${i+1}:\n`;
+    let subtotalPulsera = MANO_OBRA;
 
-    pulsera.querySelectorAll(".decoracion").forEach(deco => {
-      const input = deco.querySelector("input");
-      const cantidad = parseInt(input.value || "0", 10);
-      if (cantidad > 0) {
-        const { nombre, precio } = obtenerNombreYPrecio(deco, input);
-        const subtotalItem = cantidad * precio;
-        resumen += ` - ${nombre} ($${precio.toLocaleString("es-CO")}) x${cantidad} = $${subtotalItem.toLocaleString("es-CO")} COP\n`;
-        subtotalPulsera += subtotalItem;
-      }
-    });
+    // CAMBIO CLAVE: Iterar sobre TODOS los inputs de cantidad
+    pulsera.querySelectorAll(".item-decoracion input[type='text']").forEach(input => {
+      const cantidad = parseInt(input.value || "0", 10);
+      if (cantidad > 0) {
+        // La función obtenerNombreYPrecio ahora solo necesita el input
+        const { nombre, precio } = obtenerNombreYPrecio(input);
+        const subtotalItem = cantidad * precio;
+        resumen += ` - ${nombre} ($${precio.toLocaleString("es-CO")}) x${cantidad} = $${subtotalItem.toLocaleString("es-CO")} COP\n`;
+        subtotalPulsera += subtotalItem;
+      }
+    });
 
-    const notas = pulsera.querySelector(".notas")?.value.trim();
-    if (notas) resumen += `   Notas: ${notas}\n`;
+    const notas = pulsera.querySelector(".notas")?.value.trim();
+    if (notas) resumen += `   Notas: ${notas}\n`;
 
-    resumen += ` Mano de obra: $${MANO_OBRA.toLocaleString("es-CO")} COP\n`;
-    resumen += ` Subtotal Pulsera ${i+1}: $${subtotalPulsera.toLocaleString("es-CO")} COP\n\n`;
+    resumen += ` Mano de obra: $${MANO_OBRA.toLocaleString("es-CO")} COP\n`;
+    resumen += ` Subtotal Pulsera ${i+1}: $${subtotalPulsera.toLocaleString("es-CO")} COP\n\n`;
 
-    totalGeneral += subtotalPulsera;
-  });
+    totalGeneral += subtotalPulsera;
+  });
 
-  resumen += `Total: $${totalGeneral.toLocaleString("es-CO")} COP\n`;
-  return { texto: resumen, total: totalGeneral };
+  resumen += `Total: $${totalGeneral.toLocaleString("es-CO")} COP\n`;
+  return { texto: resumen, total: totalGeneral };
 }
 
 /* Descargar PDF */
@@ -383,6 +474,7 @@ document.addEventListener("DOMContentLoaded", actualizarTotales);
 
 </body>
 </html>
+
 
 
 
