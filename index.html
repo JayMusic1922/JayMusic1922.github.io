@@ -7,6 +7,51 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
+
+/* ************** ESTILOS DEL ZOOM (MODAL) ************** */
+
+/* 1. Fondo del Modal (oculto por defecto) */
+.modal-zoom {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Posición fija para cubrir toda la ventana */
+    z-index: 1001; /* Alto para que esté por encima de todo, incluyendo el loader */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Permite scroll si la imagen es muy grande */
+    background-color: rgba(0,0,0,0.9); /* Fondo negro semitransparente */
+}
+
+/* 2. Botón de Cerrar (la 'x') */
+.cerrar-btn {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.cerrar-btn:hover,
+.cerrar-btn:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 3. Contenido de la Imagen Ampliada */
+.modal-contenido {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    margin-top: 10%; /* Lo baja un poco del centro vertical */
+}
+
+/* ************************************************* */
+
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -248,17 +293,17 @@
   <summary> Piedreria ($100) </summary>
     <div class="contenido-decoracion">
 
-                      <div class="item-decoracion"> 
-            <img src="letras.png" alt="letras" style="height:100px;">
+                      <div class="item-decoracion"> 
+            <img src="letras.png" alt="letras" style="height:100px; cursor: pointer;" onclick="abrirModal(this.src)">
             <div class="contador">
                 <button class="menos">-</button>
                 <input type="text" value="0" readonly data-precio="100" data-nombre="letras">
                 <button class="mas">+</button>
             </div>
         </div>
-        
-                <div class="item-decoracion"> 
-            <img src="circulo_corazon.png" alt="circulo_corazon" style="height:100px;">
+        
+                <div class="item-decoracion"> 
+            <img src="circulo_corazon.png" alt="circulo_corazon" style="height:100px; cursor: pointer;" onclick="abrirModal(this.src)">
             <div class="contador">
                 <button class="menos">-</button>
                 <input type="text" value="0" readonly data-precio="100" data-nombre="circulo_corazon">
@@ -266,8 +311,8 @@
             </div>
         </div>
 
-                     <div class="item-decoracion"> 
-            <img src="diamantes.png" alt="diamantes" style="height:100px;">
+                     <div class="item-decoracion"> 
+            <img src="diamantes.png" alt="diamantes" style="height:100px; cursor: pointer;" onclick="abrirModal(this.src)">
             <div class="contador">
                 <button class="menos">-</button>
                 <input type="text" value="0" readonly data-precio="100" data-nombre="diamantes">
@@ -275,8 +320,8 @@
             </div>
         </div>
 
-                     <div class="item-decoracion"> 
-            <img src="forma_corazon.png" alt="forma_corazon" style="height:100px;">
+                     <div class="item-decoracion"> 
+            <img src="forma_corazon.png" alt="forma_corazon" style="height:100px; cursor: pointer;" onclick="abrirModal(this.src)">
             <div class="contador">
                 <button class="menos">-</button>
                 <input type="text" value="0" readonly data-precio="100" data-nombre="forma_corazon">
@@ -284,8 +329,8 @@
             </div>
         </div>
 
-                     <div class="item-decoracion"> 
-            <img src="forma_craneo.png" alt="forma_craneo" style="height:100px;">
+                     <div class="item-decoracion"> 
+            <img src="forma_craneo.png" alt="forma_craneo" style="height:100px; cursor: pointer;" onclick="abrirModal(this.src)">
             <div class="contador">
                 <button class="menos">-</button>
                 <input type="text" value="0" readonly data-precio="100" data-nombre="forma_craneo">
@@ -293,8 +338,8 @@
             </div>
         </div>
 
-                     <div class="item-decoracion"> 
-            <img src="forma_rosa.png" alt="forma_rosa" style="height:100px;">
+                     <div class="item-decoracion"> 
+            <img src="forma_rosa.png" alt="forma_rosa" style="height:100px; cursor: pointer;" onclick="abrirModal(this.src)">
             <div class="contador">
                 <button class="menos">-</button>
                 <input type="text" value="0" readonly data-precio="100" data-nombre="forma_rosa">
@@ -302,8 +347,8 @@
             </div>
         </div>
 
-                     <div class="item-decoracion"> 
-            <img src="numeros.png" alt="numeros" style="height:100px;">
+                     <div class="item-decoracion"> 
+            <img src="numeros.png" alt="numeros" style="height:100px; cursor: pointer;" onclick="abrirModal(this.src)">
             <div class="contador">
                 <button class="menos">-</button>
                 <input type="text" value="0" readonly data-precio="100" data-nombre="numeros">
@@ -311,8 +356,8 @@
             </div>
         </div>
 
-                     <div class="item-decoracion"> 
-            <img src="rosa_ceniza.png" alt="rosa_ceniza" style="height:100px;">
+                     <div class="item-decoracion"> 
+            <img src="rosa_ceniza.png" alt="rosa_ceniza" style="height:100px; cursor: pointer;" onclick="abrirModal(this.src)">
             <div class="contador">
                 <button class="menos">-</button>
                 <input type="text" value="0" readonly data-precio="100" data-nombre="rosa_ceniza">
@@ -320,8 +365,8 @@
             </div>
         </div>
 
-                     <div class="item-decoracion"> 
-            <img src="rosa_plata.png" alt="rosa_plata" style="height:100px;">
+                     <div class="item-decoracion"> 
+            <img src="rosa_plata.png" alt="rosa_plata" style="height:100px; cursor: pointer;" onclick="abrirModal(this.src)">
             <div class="contador">
                 <button class="menos">-</button>
                 <input type="text" value="0" readonly data-precio="100" data-nombre="rosa_plata">
@@ -329,8 +374,8 @@
             </div>
         </div>
 
-                     <div class="item-decoracion"> 
-            <img src="solidos.png" alt="solidos" style="height:100px;">
+                     <div class="item-decoracion"> 
+            <img src="solidos.png" alt="solidos" style="height:100px; cursor: pointer;" onclick="abrirModal(this.src)">
             <div class="contador">
                 <button class="menos">-</button>
                 <input type="text" value="0" readonly data-precio="100" data-nombre="solidos">
@@ -345,12 +390,12 @@
   <summary>Dijes</summary>
     <div class="contenido-decoracion">
 
-        <div class="item-decoracion item-centrado">           
-            <div class="grupo-visual">
-              <span>($1000)</span> 
-              <img src="dijes.png" alt="dijes" style="height:100px;">
-            </div>
-            
+        <div class="item-decoracion item-centrado">           
+            <div class="grupo-visual">
+              <span>($1000)</span> 
+                            <img src="dijes.png" alt="dijes" style="height:100px; cursor: pointer;" onclick="abrirModal(this.src)">
+            </div>
+            
             <div class="contador">
                 <button class="menos">-</button>
                 <input type="text" value="0" readonly data-precio="1000" data-nombre="Dijes">
@@ -369,44 +414,63 @@
         </div>
 
         <div class="subtotal">Subtotal: $2000 COP</div>
-      </div>
-    </div>
+      </div>
+    </div>
 
-    <button id="agregarPulsera">➕ Agregar otra pulsera</button>
-    <div id="total">Total: $3000 COP</div>
+    <button id="agregarPulsera">➕ Agregar otra pulsera</button>
+    <div id="total">Total: $3000 COP</div>
 
-    <div class="botones-exportar">
-      <button onclick="descargarPDF()">📄 Descargar Vale en PDF</button>
-      <button class="whatsapp" onclick="enviarWhatsApp()">💬 Enviar por WhatsApp</button>
-    </div>
-  </div>
+    <div class="botones-exportar">
+      <button onclick="descargarPDF()">📄 Descargar Vale en PDF</button>
+      <button class="whatsapp" onclick="enviarWhatsApp()">💬 Enviar por WhatsApp</button>
+    </div>
+  </div>
+
+<div id="imagen-modal" class="modal-zoom" onclick="cerrarModal()">
+    <span class="cerrar-btn">&times;</span>
+    <img class="modal-contenido" id="imagen-ampliada">
+</div>
 
 <script>
-const WHATSAPP_NUM = "573014348004"; 
+const WHATSAPP_NUM = "573014348004"; 
 const MANO_OBRA = 3000;
+
+/* ************** INICIALIZACIÓN DEL MODAL ************** */
+const modal = document.getElementById('imagen-modal');
+const imagenAmpliada = document.getElementById('imagen-ampliada');
+
+function abrirModal(src) {
+    imagenAmpliada.src = src;
+    modal.style.display = 'block';
+}
+
+function cerrarModal() {
+    // Asegura que solo se cierre al hacer clic en el fondo o en la X
+    if (event.target === modal || event.target.classList.contains('cerrar-btn')) {
+        modal.style.display = 'none';
+    }
+}
+/* **************************************************** */
 
 /* Extraer nombre y precio de forma robusta (usando data attributes del input) */
 function obtenerNombreYPrecio(input) {
-  // El nombre se lee directamente de input.dataset.nombre (e.g., "Letras")
   const nombre = input.dataset.nombre || "Artículo sin nombre";
   const precio = parseInt(input.dataset.precio || "0", 10);
   return { nombre, precio };
 }
 
-/* Actualizar totales en pantalla (CORREGIDO) */
+/* Actualizar totales en pantalla */
 function actualizarTotales() {
   let totalGeneral = 0;
   document.querySelectorAll(".pulsera").forEach((pulsera, i) => {
     let subtotalPulsera = MANO_OBRA;
 
-    // CAMBIO CLAVE: Iterar sobre TODOS los inputs de cantidad dentro de la pulsera
     pulsera.querySelectorAll(".item-decoracion input[type='text']").forEach(input => {
       const cantidad = parseInt(input.value || "0", 10);
-      // La función obtenerNombreYPrecio ahora solo necesita el input
       const { precio } = obtenerNombreYPrecio(input);
       subtotalPulsera += cantidad * precio;
     });
-    
+    
     const subtotalDiv = pulsera.querySelector(".subtotal");
     if (subtotalDiv) {
       subtotalDiv.textContent = `Subtotal: $${subtotalPulsera.toLocaleString("es-CO")} COP`;
@@ -418,9 +482,9 @@ function actualizarTotales() {
   document.getElementById("total").textContent = `Total: $${totalGeneral.toLocaleString("es-CO")} COP`;
 }
 
-/* Generar resumen (CORREGIDO) */
+/* Generar resumen (CLAVE para PDF y WhatsApp) */
 function generarResumenTexto() {
-  let resumen = "Resumen de pedido - The Family Store\n\n";
+  let resumen = "¡Hola! Quisiera realizar este pedido de pulseras:\n\n";
   let totalGeneral = 0;
   const pulseras = document.querySelectorAll(".pulsera");
 
@@ -429,14 +493,14 @@ function generarResumenTexto() {
   }
 
   pulseras.forEach((pulsera, i) => {
-    resumen += `Pulsera ${i+1}:\n`;
+    resumen += `*Pulsera ${i+1}:*\n`;
     let subtotalPulsera = MANO_OBRA;
+    let tieneDecoracion = false; 
 
-    // CAMBIO CLAVE: Iterar sobre TODOS los inputs de cantidad
     pulsera.querySelectorAll(".item-decoracion input[type='text']").forEach(input => {
       const cantidad = parseInt(input.value || "0", 10);
       if (cantidad > 0) {
-        // La función obtenerNombreYPrecio ahora solo necesita el input
+        tieneDecoracion = true;
         const { nombre, precio } = obtenerNombreYPrecio(input);
         const subtotalItem = cantidad * precio;
         resumen += ` - ${nombre} ($${precio.toLocaleString("es-CO")}) x${cantidad} = $${subtotalItem.toLocaleString("es-CO")} COP\n`;
@@ -444,82 +508,112 @@ function generarResumenTexto() {
       }
     });
 
-    const notas = pulsera.querySelector(".notas")?.value.trim();
-    if (notas) resumen += `   Notas: ${notas}\n`;
+    if (!tieneDecoracion) {
+        resumen += ` - Solo pulsera (Costo Base): $${MANO_OBRA.toLocaleString("es-CO")} COP\n`;
+    }
 
-    resumen += ` Mano de obra: $${MANO_OBRA.toLocaleString("es-CO")} COP\n`;
-    resumen += ` Subtotal Pulsera ${i+1}: $${subtotalPulsera.toLocaleString("es-CO")} COP\n\n`;
+    const notas = pulsera.querySelector(".notas")?.value.trim();
+    if (notas) resumen += ` *Detalles:* ${notas}\n`;
+
+    if (tieneDecoracion) {
+        resumen += ` Costo Base (Mano de obra): $${MANO_OBRA.toLocaleString("es-CO")} COP\n`;
+    }
+    resumen += ` **Subtotal Pulsera ${i+1}: $${subtotalPulsera.toLocaleString("es-CO")} COP**\n\n`;
 
     totalGeneral += subtotalPulsera;
   });
 
-  resumen += `Total: $${totalGeneral.toLocaleString("es-CO")} COP\n`;
+  resumen += `*----------------------------------*\n`;
+  resumen += `**TOTAL GENERAL: $${totalGeneral.toLocaleString("es-CO")} COP**\n`;
+  resumen += `*----------------------------------*\n`;
+  resumen += `¡Gracias por tu compra!`;
+
   return { texto: resumen, total: totalGeneral };
 }
 
-/* Descargar PDF */
+/* 📄 Descargar PDF */
 function descargarPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: "pt", format: "a4" });
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
 
-  const { texto } = generarResumenTexto();
-  const lines = doc.splitTextToSize(texto, 520);
+  const { texto } = generarResumenTexto();
+  const textoPDF = texto.replace(/\*/g, '').replace(/_/g, ''); 
+  const lines = doc.splitTextToSize(textoPDF, 520);
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(12);
 
-  let y = 40;
-  lines.forEach(line => {
-    if (y > 800) {
-      doc.addPage();
-      y = 40;
-    }
-    doc.text(line, 40, y);
-    y += 14;
-  });
+  // Título
+  doc.setFontSize(18);
+  doc.setFont("helvetica", "bold");
+  doc.text("Vale de Pedido - The Family Store", 40, 40);
+  doc.setLineWidth(1);
+  doc.line(40, 50, 560, 50);
 
-  doc.save("vale_compra.pdf");
+  let y = 70;
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
+
+  lines.forEach(line => {
+    if (y > 800) {
+      doc.addPage();
+      y = 40;
+    }
+    // Estilos para negritas
+    if (line.includes("Subtotal Pulsera") || line.includes("TOTAL GENERAL")) {
+        doc.setFont("helvetica", "bold");
+        doc.text(line, 40, y);
+        doc.setFont("helvetica", "normal");
+    } else {
+        doc.text(line, 40, y);
+    }
+    y += 14;
+  });
+
+  doc.save("vale_compra.pdf");
 }
 
-/* Enviar por WhatsApp */
+/* 💬 Enviar por WhatsApp */
 function enviarWhatsApp() {
-  const { texto } = generarResumenTexto();
-  const numero = WHATSAPP_NUM.replace(/\D/g, "");
-  const url = `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
-  window.open(url, "_blank");
+  const { texto } = generarResumenTexto();
+  const numero = WHATSAPP_NUM.replace(/\D/g, "");
+  // Usamos encodeURIComponent para asegurar que los saltos de línea y símbolos se envíen bien.
+  const url = `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
+  window.open(url, "_blank");
 }
 
-/* Delegación de eventos */
+/* ************** DELEGACIÓN DE EVENTOS ************** */
+
 document.addEventListener("click", e => {
-  if (e.target.classList.contains("mas")) {
-    const input = e.target.parentElement.querySelector("input");
-    input.value = parseInt(input.value || "0", 10) + 1;
-    actualizarTotales();
-  }
+  if (e.target.classList.contains("mas")) {
+    const input = e.target.parentElement.querySelector("input");
+    input.value = parseInt(input.value || "0", 10) + 1;
+    actualizarTotales();
+  }
 
-  if (e.target.classList.contains("menos")) {
-    const input = e.target.parentElement.querySelector("input");
-    input.value = Math.max(0, parseInt(input.value || "0", 10) - 1);
-    actualizarTotales();
-  }
+  if (e.target.classList.contains("menos")) {
+    const input = e.target.parentElement.querySelector("input");
+    input.value = Math.max(0, parseInt(input.value || "0", 10) - 1);
+    actualizarTotales();
+  }
 
-  if (e.target.classList.contains("btn-borrar")) {
-    e.target.closest(".pulsera").remove();
-    actualizarTotales();
-  }
+  if (e.target.classList.contains("btn-borrar")) {
+    e.target.closest(".pulsera").remove();
+    actualizarTotales();
+  }
 
-  if (e.target.id === "agregarPulsera") {
-    const contenedor = document.getElementById("pulseras");
-    const primera = contenedor.querySelector(".pulsera");
-    const copia = primera.cloneNode(true);
+  if (e.target.id === "agregarPulsera") {
+    const contenedor = document.getElementById("pulseras");
+    const primera = contenedor.querySelector(".pulsera");
+    const copia = primera.cloneNode(true);
 
-    copia.querySelectorAll("input").forEach(input => input.value = "0");
-    copia.querySelectorAll("textarea").forEach(area => area.value = "");
-    copia.querySelector(".subtotal").textContent = `Subtotal: $${MANO_OBRA.toLocaleString("es-CO")} COP`;
+    copia.querySelectorAll("input").forEach(input => input.value = "0");
+    copia.querySelectorAll("textarea").forEach(area => area.value = "");
+    copia.querySelector(".subtotal").textContent = `Subtotal: $${MANO_OBRA.toLocaleString("es-CO")} COP`;
 
-    contenedor.appendChild(copia);
-    actualizarTotales();
-  }
+    contenedor.appendChild(copia);
+    actualizarTotales();
+  }
 });
 
 /* Inicializar totales */
@@ -528,6 +622,7 @@ document.addEventListener("DOMContentLoaded", actualizarTotales);
 
 </body>
 </html>
+
 
 
 
