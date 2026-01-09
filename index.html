@@ -101,12 +101,17 @@
       background: #fff;
     }
 
-    .pulsera h3 {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 0;
-    }
+ .pulsera h3 {
+    font-size: 32px; /* Aumenta el tamaño aquí */
+    color: #333;    /* Un color oscuro para que resalte */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0;
+    margin-bottom: 15px; /* Espacio extra debajo del título */
+    border-bottom: 2px solid #f0f0f0; /* Opcional: una línea sutil abajo */
+    padding-bottom: 5px;
+}
 
     .btn-borrar {
       background: none;
@@ -125,8 +130,10 @@
     }
 
     .decoracion summary {
+        font-size: 28px;
         cursor: pointer;
-        font-weight: bold;
+        font-weight: normal;
+        text-decoration: underline;
         padding: 5px 0;
         list-style: none; /* Oculta la flecha por defecto */
         display: flex;
@@ -278,12 +285,31 @@
     .botones-exportar .whatsapp:hover {
       background: #1ebe5d;
     }
+@font-face {
+    font-family: 'StoreFont';
+    src: url('miamiwriting.ttf'); /* REEMPLAZA ESTO CON EL NOMBRE DE TU ARCHIVO */
+  }
+
+  body {
+    font-family: 'StoreFont', sans-serif;
+    /* ... resto de tu código ... */
+  }
+  
+  /* Asegúrate de que el H1 también la use */
+  h1 {
+    font-family: 'StoreFont', sans-serif;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
   </style>
 </head>
 <body>
   <div class="contenedor">
     <h1><img src="logo.png" alt="logo" style="height:150px; vertical-align:middle;"> The Family Store</h1>
-    <p>Cada pulsera tiene un costo fijo de $3.000 COP Sientete libre y Arma tus pulseras con las decoraciones que quieras. 🧡🖤</p>
+    <p style="font-size: 30px; text-align: center; font-weight: 500; margin-bottom: 25px;">
+  Cada pulsera tiene un costo fijo de $3.000 COP Sientete libre y Arma tus pulseras con las decoraciones que quieras. 🧡🖤
+</p>
 
     <div id="pulseras">
       <div class="pulsera">
@@ -622,6 +648,7 @@ document.addEventListener("DOMContentLoaded", actualizarTotales);
 
 </body>
 </html>
+
 
 
 
